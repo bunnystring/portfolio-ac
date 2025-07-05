@@ -1,8 +1,20 @@
 import tippy from 'tippy.js';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { provideIcons } from '@ng-icons/core';
 import { featherAirplay, featherFacebook } from '@ng-icons/feather-icons';
-import { lucideFacebook, lucideLinkedin, lucideGithub, lucideInstagram, lucideGamepad2 } from '@ng-icons/lucide';
+import {
+  lucideFacebook,
+  lucideLinkedin,
+  lucideGithub,
+  lucideInstagram,
+  lucideGamepad2,
+} from '@ng-icons/lucide';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { EyeTracking } from '../../eye-tracking/eye-tracking';
 import { ReflectorBulbServices } from '../../../services/reflector-bulb-services/reflector-bulb-services';
@@ -13,11 +25,17 @@ import { Router, RouterModule } from '@angular/router';
 export const headerSlideIn = trigger('headerSlideIn', [
   transition(':enter', [
     style({ transform: 'translateY(-100%)', opacity: 0 }),
-    animate('400ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
+    animate(
+      '400ms ease-out',
+      style({ transform: 'translateY(0)', opacity: 1 })
+    ),
   ]),
   transition(':leave', [
-    animate('300ms ease-in', style({ transform: 'translateY(-100%)', opacity: 0 }))
-  ])
+    animate(
+      '300ms ease-in',
+      style({ transform: 'translateY(-100%)', opacity: 0 })
+    ),
+  ]),
 ]);
 @Component({
   selector: 'app-menu-header',
@@ -44,10 +62,18 @@ export class MenuHeaderComponent implements OnInit, AfterViewInit {
   modePlaySnake = true;
   showMenu = false;
 
+  // Referencia al menú para saber si el click fue dentro o fuera
+  @ViewChild('mobileMenu') mobileMenuRef!: ElementRef;
+
+  // Listener para click fuera y tecla ESC
+  private documentClickListener: any;
+  private escapeKeyListener: any;
+
   constructor(
     private reflectorBulbServices: ReflectorBulbServices,
     private homeServices: HomeServices,
     private router: Router,
+    private elRef: ElementRef
   ) {}
 
   /**
@@ -68,6 +94,10 @@ export class MenuHeaderComponent implements OnInit, AfterViewInit {
     this.activeModeGame(false);
     this.onResize();
     window.addEventListener('resize', () => this.onResize());
+  }
+
+  ngOnDestroy(): void {
+    this.removeDocumentListeners();
   }
 
   /**
@@ -194,7 +224,6 @@ export class MenuHeaderComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   /**
    * Método para alternar la visibilidad del menú.
    * Cambia el estado de showMenu y agrega o quita la clase 'no-scroll' del body según corresponda.
@@ -207,8 +236,73 @@ export class MenuHeaderComponent implements OnInit, AfterViewInit {
     this.showMenu = !this.showMenu;
     if (this.showMenu && this.isMobile) {
       document.body.classList.add('no-scroll');
+      setTimeout(() => this.addDocumentListeners(), 0); // <---- Aquí el cambio
     } else {
       document.body.classList.remove('no-scroll');
+      this.removeDocumentListeners();
+    }
+  }
+
+  /**
+   * Método para agregar listeners al documento para detectar clicks fuera del menú y la tecla ESC.
+   * Si el menú está visible, agrega un listener para clicks fuera del menú y otro para la tecla ESC.
+   * Estos listeners se encargan de ocultar el menú si se detecta un click fuera del menú o si se presiona la tecla ESC.
+   * @returns void
+   * @version 1.0.0
+   * @author Arlez Camilo Ceron Herrera
+   */
+  hideMenu() {
+    this.showMenu = false;
+    document.body.classList.remove('no-scroll');
+    this.removeDocumentListeners();
+  }
+
+  /**
+   * Método para eliminar los listeners del documento.
+   * Elimina los listeners de click y de tecla ESC si existen.
+   *
+   * @returns void
+   * @version 1.0.0
+   * @author Arlez Camilo Ceron Herrera
+   */
+  private addDocumentListeners() {
+    if (!this.documentClickListener) {
+      this.documentClickListener = (event: MouseEvent) => {
+        const navToggler = this.elRef.nativeElement.querySelector('.navbar-toggler');
+        if (
+          this.showMenu &&
+          this.isMobile &&
+          this.mobileMenuRef &&
+          !this.mobileMenuRef.nativeElement.contains(event.target) && // <--- SOLO FUERA DEL NAV
+          !(navToggler && navToggler.contains(event.target))
+        ) {
+          this.hideMenu();
+        }
+      };
+      document.addEventListener('mousedown', this.documentClickListener, true);
+    }
+  }
+
+  /**
+   * Método para eliminar los listeners del documento.
+   * Elimina los listeners de click y de tecla ESC si existen.
+   *
+   * @returns void
+   * @version 1.0.0
+   * @author Arlez Camilo Ceron Herrera
+   */
+  private removeDocumentListeners() {
+    if (this.documentClickListener) {
+      document.removeEventListener(
+        'mousedown',
+        this.documentClickListener,
+        true
+      );
+      this.documentClickListener = null;
+    }
+    if (this.escapeKeyListener) {
+      document.removeEventListener('keydown', this.escapeKeyListener, true);
+      this.escapeKeyListener = null;
     }
   }
 
@@ -221,9 +315,9 @@ export class MenuHeaderComponent implements OnInit, AfterViewInit {
    * @version 1.0.0
    * @author Arlez Camilo Ceron Herrera
    */
-  goToPage(pageName:string){
+  goToPage(pageName: string) {
     console.log('Navigating to:', pageName);
-  this.router.navigateByUrl(pageName);
+    this.router.navigateByUrl(pageName);
   }
 
   /**

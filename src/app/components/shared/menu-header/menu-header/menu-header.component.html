@@ -4,21 +4,15 @@
 
       <!-- Fila superior SOLO en móvil -->
       <div class="mobile-header-row d-lg-none">
-        <button
-        class="btn navbar-toggler"
-        type="button"
-        (click)="toggleMenu()"
-        aria-label="Toggle menu"
-        [class.active]="showMenu && isMobile"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <button class="btn navbar-toggler" type="button" (click)="toggleMenu()" aria-label="Toggle menu"
+          [class.active]="showMenu && isMobile">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="eye-mobile">
           <app-eye-tracking></app-eye-tracking>
         </div>
         <div class="lamp-mobile">
-          <!-- Botón lámpara - NO MODIFICADO -->
           <label class="tooltip-header" id="turn-on-lamp" data-tippy-content="Encender lámpara">
             <input type="checkbox" id="power-icon" [checked]="lampTurnOn" (click)="onClickLight()">
             <div class="power-toggle"></div>
@@ -26,24 +20,20 @@
         </div>
       </div>
 
+      <!-- HEADER solo visible en desktop o cuando menú móvil está cerrado -->
       <header
-      class="d-flex flex-wrap justify-content-center align-items-center px-3 py-2 w-100"
-      [@headerSlideIn]
-      *ngIf="(showMenu && isMobile) || !isMobile"
-    >
-
-        <!-- Menú principal SOLO links -->
-        <nav
-  class="menu mb-2 mb-lg-0"
-  [class.open]="showMenu && isMobile"
-  [class.d-none]="!showMenu && isMobile"
-  [class.d-flex]="!isMobile">
-  <a [routerLink]="'/home'" [ngClass]="{'active' : isActiveRoute('/home')}">Home</a>
-  <a [routerLink]="'/about-it'"  [ngClass]="{'active' : isActiveRoute('/about-it')}">About</a>
-  <a [routerLink]="'/home'" (click)="scrollToSection('skills')">Skills</a>
-  <a [routerLink]="'/home'" (click)="scrollToSection('projects')">Projects</a>
-  <a [routerLink]="'/contact-me'" [ngClass]="{'active' : isActiveRoute('/contact-me')}">Contact me</a>
-</nav>
+        *ngIf="!isMobile || !showMenu"
+        class="d-flex flex-wrap justify-content-center align-items-center px-3 py-2 w-100"
+        [@headerSlideIn]
+      >
+        <!-- Menú principal SOLO links (desktop) -->
+        <nav class="menu mb-2 mb-lg-0 d-none d-lg-flex">
+          <a [routerLink]="'/home'" [ngClass]="{'active' : isActiveRoute('/home')}">Home</a>
+          <a [routerLink]="'/about-it'" [ngClass]="{'active' : isActiveRoute('/about-it')}">About</a>
+          <a [routerLink]="'/home'" (click)="scrollToSection('skills')">Skills</a>
+          <a [routerLink]="'/home'" (click)="scrollToSection('projects')">Projects</a>
+          <a [routerLink]="'/contact-me'" [ngClass]="{'active' : isActiveRoute('/contact-me')}">Contact me</a>
+        </nav>
 
         <!-- Ojos (solo desktop) -->
         <div class="menu d-none d-lg-flex justify-content-center align-items-center mb-2 mb-lg-0">
@@ -67,7 +57,6 @@
           <a class="border0" (click)="activeModeGame(modePlaySnake)">
             <img class="joystick tooltip-header" id="joystick" src="/assets/images/joystick.png" alt="Play with me" width="25">
           </a>
-          <!-- Botón lámpara - NO MODIFICADO -->
           <a class="border0">
             <label class="tooltip-header" id="turn-on-lamp" data-tippy-content="Turn On/Off Lamp">
               <input type="checkbox" id="power-icon" [checked]="lampTurnOn" (click)="onClickLight()">
@@ -76,6 +65,19 @@
           </a>
         </div>
       </header>
+
+      <!-- MENÚ RESPONSIVE SOLO EN MOBILE, overlay y fuera del header -->
+      <nav *ngIf="isMobile && showMenu"
+        #mobileMenu
+        class="menu-mobile-overlay"
+        [@headerSlideIn]
+      >
+        <a [routerLink]="'/home'" [ngClass]="{'active' : isActiveRoute('/home')}" (click)="hideMenu()">Home</a>
+        <a [routerLink]="'/about-it'" [ngClass]="{'active' : isActiveRoute('/about-it')}" (click)="hideMenu()">About</a>
+        <a [routerLink]="'/home'" (click)="scrollToSection('skills'); hideMenu()">Skills</a>
+        <a [routerLink]="'/home'" (click)="scrollToSection('projects'); hideMenu()">Projects</a>
+        <a [routerLink]="'/contact-me'" [ngClass]="{'active' : isActiveRoute('/contact-me')}" (click)="hideMenu()">Contact me</a>
+      </nav>
     </div>
   </div>
 </div>

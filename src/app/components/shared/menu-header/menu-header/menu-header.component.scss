@@ -199,22 +199,30 @@ button.navbar-toggler {
   font-size: 1.25rem;
   line-height: 1;
   display: inline-block;
+  border-radius: 8px;
+  transition: background 0.2s;
 }
 .navbar-toggler-icon {
   display: inline-block;
   width: 2em;
   height: 2em;
   vertical-align: middle;
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,0.7%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
+  transition: filter 0.2s;
 }
 .btn.navbar-toggler.active,
 button.navbar-toggler.active {
   background: var(--scolor);
   color: #fff;
   border-radius: 8px;
+}
+.btn.navbar-toggler.active .navbar-toggler-icon,
+button.navbar-toggler.active .navbar-toggler-icon {
+  // Puedes cambiar el SVG de fondo si quieres barras negras:
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,0,0,0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
 /* =======================
@@ -250,49 +258,14 @@ button.navbar-toggler.active {
   .menu.col-lg-2 {
     display: none !important;
   }
-
-  nav.menu {
-    /* Oculto por defecto */
-    display: none !important;
-    opacity: 0 !important;
-    max-height: 0 !important;
-    pointer-events: none !important;
-    overflow: hidden !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    width: 100% !important;
-    gap: 16px;
-    position: fixed !important;
-    left: 0; right: 0;
-    top: 60px; /* Ajusta a tu header real */
-    background: #181b20e6;
-    border-radius: 0 0 16px 16px;
-    box-shadow: 0 4px 24px #0002;
-    padding: 1.2rem 0 .8rem 0;
-    z-index: 2000 !important;
-    transition: none !important; /* instantáneo */
-    /* Si quieres pequeña animación usa: transition: max-height .15s, opacity .10s; */
-  }
-  nav.menu.open {
-    display: flex !important;
-    opacity: 1 !important;
-    max-height: 1000px !important;
-    pointer-events: auto !important;
-    overflow: visible !important;
-  }
-  nav.menu.d-none {
-    display: none !important;
-  }
-  nav.menu.open a {
-    color: #fff !important;
-    font-size: 1.15rem;
-    padding: 12px 0;
-    width: 100vw;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  nav.menu.open a:last-child {
-    border-bottom: none;
+  button.navbar-toggler:hover,
+  .btn.navbar-toggler:hover,
+  .menu-mobile-overlay a:hover {
+    background: none !important;
+    color: inherit !important;
+    text-decoration: none !important;
+    // Si quieres, puedes quitar también cualquier sombra, borde, etc.
+    border: none !important;
   }
 }
 
@@ -421,14 +394,6 @@ body.no-scroll {
   height: 100vh;
   width: 100vw;
 }
-
-@media (max-width: 992px) {
-  nav.menu.open {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    max-height: calc(100vh - 60px) !important;
-  }
-}
 @media (max-width: 992px) {
   .wrap {
     width: 100vw !important;
@@ -459,16 +424,6 @@ body.no-scroll {
     align-items: center !important;
     gap: 16px;
     transition: opacity 0.15s;
-  }
-  nav.menu.open {
-    display: flex !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-  nav.menu.d-none {
-    display: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
   }
 }
 
@@ -683,8 +638,8 @@ button.navbar-toggler {
 }
 .btn.navbar-toggler.active,
 button.navbar-toggler.active {
-  background: var(--scolor);
-  color: #fff;
+  background: #ffc107 !important;
+  color: #fff !important;
   border-radius: 8px;
 }
 
@@ -710,7 +665,7 @@ button.navbar-toggler.active {
     gap: 18px;
     width: 100%;
     margin-bottom: 10px;
-    z-index: 101;
+    z-index: 4000;
   }
   .mobile-header-row .navbar-toggler { order: 1; }
   .mobile-header-row .eye-mobile { order: 2; display: flex; align-items: center; justify-content: center; }
@@ -720,50 +675,6 @@ button.navbar-toggler.active {
   .menu.col-lg-4,
   .menu.col-lg-2 {
     display: none !important;
-  }
-
-  nav.menu {
-    /* Oculto por defecto */
-    display: none !important;
-    opacity: 0 !important;
-    max-height: 0 !important;
-    pointer-events: none !important;
-    overflow: hidden !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    width: 100% !important;
-    gap: 16px;
-    position: fixed !important;
-    left: 0; right: 0;
-    top: 60px; /* Ajusta a tu header real */
-    background: #181b20e6;
-    border-radius: 0 0 16px 16px;
-    box-shadow: 0 4px 24px #0002;
-    padding: 1.2rem 0 .8rem 0;
-    z-index: 2000 !important;
-    transition: none !important; /* instantáneo */
-    /* Si quieres pequeña animación usa: transition: max-height .15s, opacity .10s; */
-  }
-  nav.menu.open {
-    display: flex !important;
-    opacity: 1 !important;
-    max-height: 1000px !important;
-    pointer-events: auto !important;
-    overflow: visible !important;
-  }
-  nav.menu.d-none {
-    display: none !important;
-  }
-  nav.menu.open a {
-    color: #fff !important;
-    font-size: 1.15rem;
-    padding: 12px 0;
-    width: 100vw;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  nav.menu.open a:last-child {
-    border-bottom: none;
   }
 }
 
@@ -894,13 +805,6 @@ body.no-scroll {
 }
 
 @media (max-width: 992px) {
-  nav.menu.open {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    max-height: calc(100vh - 60px) !important;
-  }
-}
-@media (max-width: 992px) {
   .wrap {
     width: 100vw !important;
     overflow: hidden !important;
@@ -910,35 +814,64 @@ body.no-scroll {
     opacity: 5 !important;
     background: #02112be6;
   }
-  nav.menu {
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    top: 60px; // Ajusta este valor al alto de tu header
+}
+
+.menu-mobile-overlay {
+  position: fixed !important;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3000; // ¡Asegura que está arriba de todo!
+  background: #181b20e6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 72px; // Ajusta según tu barra superior
+  opacity: 1;
+  gap: 0;
+  overflow-y: auto;
+
+  a {
+    color: #fff !important;
+    font-size: 1.25rem;
+    padding: 18px 0;
     width: 100vw;
-    height: calc(100vh - 60px); // Ocupará todo el viewport debajo del header
-    z-index: 2000 !important;
-    display: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    overflow-y: auto !important;
-    background: #02112be6;
-    border-radius: 0 0 16px 16px;
-    box-shadow: 0 4px 24px #0002;
-    padding: 1.2rem 0 .8rem 0;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 16px;
-    transition: opacity 0.15s;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+    background: transparent;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+
+    &:last-child {
+      border-bottom: none;
+    }
+    &.active,
+    &:hover {
+      color: #ffc107 !important;
+      background: rgba(255, 193, 7, 0.09);
+    }
   }
-  nav.menu.open {
-    display: flex !important;
+}
+
+/* Opcional: oculta el header cuando el overlay está activo en mobile */
+@media (max-width: 991.98px) {
+  header {
+    display: none !important;
+  }
+}
+
+/* Elimina z-index y position fixed conflictivos de .wrap en mobile */
+@media (max-width: 992px) {
+  .wrap {
+    position: static !important;
+    z-index: auto !important;
+    background: none !important;
     opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-  nav.menu.d-none {
-    display: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
+    width: 100vw !important;
+    overflow: visible !important;
   }
 }
